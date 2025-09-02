@@ -12,6 +12,12 @@ extern "C"
     extern void return_string(const void* data, int length);
 }
 
+namespace tint {
+tint::Result<std::string> SpirvToWgsl(const std::vector<uint32_t>& spirv,
+                                      const wgsl::writer::Options& wgsl_options = {});
+
+} 
+
 namespace
 {
     constexpr std::array<uint32_t, 132> DEBUG_SPIRV_VALUES{
