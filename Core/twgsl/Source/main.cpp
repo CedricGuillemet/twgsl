@@ -169,7 +169,7 @@ void spirv_to_wgsl(const void* bytes, int length, bool disableUniformityAnalysis
     std::memcpy(spirv.data(), bytes, length);
 
     tint::wgsl::writer::Options wgslOptions = {};
-    wgslOptions.allow_non_uniform_derivatives = disableUniformityAnalysis;
+    //wgslOptions.allow_non_uniform_derivatives = disableUniformityAnalysis;
 
     auto result = tint::SpirvToWgsl(spirv, wgslOptions);
     if (result != tint::Success) {
@@ -177,5 +177,5 @@ void spirv_to_wgsl(const void* bytes, int length, bool disableUniformityAnalysis
         return;
     }
 
-    return_string(result->wgsl.data(), result->wgsl.size());
+    return_string(result->data(), result->size());
 }
