@@ -7,5 +7,7 @@ option(TINT_BUILD_WGSL_WRITER "Build the WGSL output writer" ON)
 option(TINT_BUILD_GLSL_WRITER "Build GLSL writer" OFF)
 option(TINT_BUILD_IR "Build the IR" OFF)
 option(DAWN_BUILD_SAMPLES "Enables building Dawn's samples" OFF)
+option(DAWN_BUILD_PROTOBUF "Build the protobuf dependencies" OFF)
+option(DAWN_USE_GLFW "Enable compilation of the GLFW windowing utils" OFF)
 add_subdirectory(dawn EXCLUDE_FROM_ALL)
 
