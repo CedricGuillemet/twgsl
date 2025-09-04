@@ -1,5 +1,5 @@
-#include <tint/tint.h>
-//#include "src/tint/api/tint.h"
+//#include <tint/tint.h>
+#include "src/tint/api/tint.h"
 #include <array>
 #include <iostream>
 
@@ -169,6 +169,8 @@ void spirv_to_wgsl(const void* bytes, int length, bool disableUniformityAnalysis
     spirv.resize(length / sizeof(uint32_t));
     std::memcpy(spirv.data(), bytes, length);
 
+    tint::Initialize();
+
     tint::wgsl::writer::Options wgslOptions = {};
     wgslOptions.allow_non_uniform_derivatives = disableUniformityAnalysis;
 
@@ -177,6 +179,8 @@ void spirv_to_wgsl(const void* bytes, int length, bool disableUniformityAnalysis
         std::cerr << result.Failure().reason << std::endl;
         return;
     }
+
+    tint::Shutdown();
 
     return_string(result->data(), result->size());
 }
