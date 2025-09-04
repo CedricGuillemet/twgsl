@@ -1,5 +1,5 @@
 //#include <tint/tint.h>
-//#include "src/tint/api/tint.h"
+#include "src/tint/api/tint.h"
 #include <array>
 #include <iostream>
 
@@ -8,8 +8,8 @@
 #include <vector>
 
 //#include "src/tint/lang/wgsl/writer/common/options.h"
-#include "src/tint/utils/result.h"
-
+//#include "src/tint/utils/result.h"
+/*
 namespace wgsl {
 namespace writer {
     struct Options;
@@ -32,7 +32,7 @@ tint::Result<std::string> SpirvToWgsl(const std::vector<uint32_t>& spirv,
                                       const wgsl::writer::Options& wgsl_options);
 
 }  // namespace tint
-
+*/
 
 extern "C"
 {
