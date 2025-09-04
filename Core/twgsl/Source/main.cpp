@@ -1,5 +1,5 @@
 #include <tint/tint.h>
-
+//#include "src/tint/api/tint.h"
 #include <array>
 #include <iostream>
 
@@ -12,12 +12,13 @@ extern "C"
     extern void return_string(const void* data, int length);
 }
 
+/*
 namespace tint {
 tint::Result<std::string> SpirvToWgsl(const std::vector<uint32_t>& spirv,
                                       const wgsl::writer::Options& wgsl_options = {});
 
 } 
-
+*/
 namespace
 {
     constexpr std::array<uint32_t, 132> DEBUG_SPIRV_VALUES{
@@ -169,7 +170,7 @@ void spirv_to_wgsl(const void* bytes, int length, bool disableUniformityAnalysis
     std::memcpy(spirv.data(), bytes, length);
 
     tint::wgsl::writer::Options wgslOptions = {};
-    //wgslOptions.allow_non_uniform_derivatives = disableUniformityAnalysis;
+    wgslOptions.allow_non_uniform_derivatives = disableUniformityAnalysis;
 
     auto result = tint::SpirvToWgsl(spirv, wgslOptions);
     if (result != tint::Success) {
