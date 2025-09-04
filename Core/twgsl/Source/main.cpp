@@ -1,7 +1,38 @@
 //#include <tint/tint.h>
-#include "src/tint/api/tint.h"
+//#include "src/tint/api/tint.h"
 #include <array>
 #include <iostream>
+
+#include <cstdint>
+#include <string>
+#include <vector>
+
+//#include "src/tint/lang/wgsl/writer/common/options.h"
+#include "src/tint/utils/result.h"
+
+namespace wgsl {
+namespace writer {
+    struct Options;
+}
+};
+
+namespace tint {
+
+/// Initialize initializes the Tint library. Call before using the Tint API.
+void Initialize();
+
+/// Shutdown uninitializes the Tint library. Call after using the Tint API.
+void Shutdown();
+
+/// Convert a SPIR-V binary to a WGSL shader module string.
+/// @param spirv the SPIR-V binary
+/// @param wgsl_options the options to use for generating WGSL
+/// @returns the WGSL module, or a failure
+tint::Result<std::string> SpirvToWgsl(const std::vector<uint32_t>& spirv,
+                                      const wgsl::writer::Options& wgsl_options);
+
+}  // namespace tint
+
 
 extern "C"
 {
