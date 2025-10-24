@@ -2,6 +2,7 @@
 
 #include <array>
 #include <iostream>
+#include <sstream>
 
 extern "C"
 {
@@ -10,11 +11,12 @@ extern "C"
     
     // Callback to JavaScript
     extern void return_string(const void* data, int length);
+    extern void return_error(const void* data, int length);
 }
 
 namespace
 {
-    constexpr std::array<uint32_t, 132> DEBUG_SPIRV_VALUES{
+    constexpr std::array<uint32_t, 132> DEBUG_SPIRV_VALUES {
         119734787,
         65536,
         524296,
@@ -150,8 +152,7 @@ namespace
     };
 }
 
-void test()
-{
+void test() {
     std::cout << "Starting..." << std::endl;
     spirv_to_wgsl(DEBUG_SPIRV_VALUES.data(), DEBUG_SPIRV_VALUES.size() * sizeof(uint32_t));
     std::cout << "Stopping." << std::endl;
@@ -162,17 +163,20 @@ void spirv_to_wgsl(const void* bytes, int length, bool disableUniformityAnalysis
     spirv.resize(length / sizeof(uint32_t));
     std::memcpy(spirv.data(), bytes, length);
 
-    tint::spirv::reader::Options readerOptions = {};
-    readerOptions.allow_non_uniform_derivatives = disableUniformityAnalysis;
-    tint::Program program{tint::spirv::reader::Read(spirv, readerOptions)};
+    tint::wgsl::writer::Options options = {};
+    options.allow_non_uniform_derivatives = disableUniformityAnalysis;
 
-    if (!program.IsValid()) {
-        std::cout << program.Diagnostics().Str() << std::endl;
+    auto result = tint::SpirvToWgsl(spirv, options);
+
+    if (result != tint::Success) {
+        std::stringstream ss;
+        ss << result.Failure() << std::endl;
+        auto err = std::move(ss).str();
+        return_error(err.data(), err.size());
+        return;
     }
-    
-    tint::wgsl::writer::Options writerOptions{};
 
-    auto result = tint::wgsl::writer::Generate(program, writerOptions);
+    auto wgsl = result.Get();
 
-    return_string(result->wgsl.data(), result->wgsl.size());
+    return_string(wgsl.data(), wgsl.size());
 }

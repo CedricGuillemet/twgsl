@@ -3,47 +3,46 @@ on: workflow_dispatch
   
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2.3.3
       - name: Update submodule
         continue-on-error: true
         run: |
-             git submodule update --init --recursive --depth 1 --force
+             git submodule update --init --depth 1 --force
       - name: Python package
         run: |
              pip install --upgrade setuptools
       - name: Patch dawn
         run: |
-             yes | cp dawnPatch/CMakeLists.txt Dependencies/dawn/CMakeLists.txt
-             yes | cp dawnPatch/CMakeLists-dependencies.txt Dependencies/dawn/third_party/CMakeLists.txt
+             git apply Patches/dawn.patch
       - name: Clone/install emsdk
         run: |
              cd ..
              git clone https://github.com/emscripten-core/emsdk.git
              cd emsdk
-             ./emsdk install 3.1.24
+             ./emsdk install 4.0.18
       - name: Clone DepotTools
         run: |
              cd ..
              git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
       - name: Build
         run: |
-             brew install python-setuptools
+             sudo apt-get install python3-setuptools ninja-build
              cd ../emsdk
-             ./emsdk activate 3.1.24
+             ./emsdk activate 4.0.18
              source "emsdk_env.sh"
              cd ../depot_tools
              export PATH=$(pwd):$PATH
              cd ../twgsl/Dependencies/dawn
              cp scripts/standalone.gclient .gclient
-             gclient sync
+             gclient sync --no-history
              cd ../../..
              mkdir twgsl_build
              cd twgsl_build
-             emcmake cmake ../twgsl
-             emmake make twgsl
+             emcmake cmake -G Ninja -DCMAKE_BUILD_TYPE=RELEASE ../twgsl
+             ninja twgsl -j 4
              mkdir ../twgsl/artifact
              cp ./Core/twgsl/twgsl.js ../twgsl/artifact/twgsl.js
              cp ./Core/twgsl/twgsl.wasm ../twgsl/artifact/twgsl.wasm

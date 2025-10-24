@@ -1,0 +1,47 @@
+diff --git a/Dependencies/dawn/CMakeLists.txt b/Dependencies/dawn/CMakeLists.txt
+index 9005588a..79026517 100644
+--- a/Dependencies/dawn/CMakeLists.txt
++++ b/Dependencies/dawn/CMakeLists.txt
+@@ -51,10 +51,6 @@ set(CMAKE_DEBUG_POSTFIX "")
+ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+ 
+ set(IS_DEBUG_BUILD 0)
+-string(TOUPPER "${CMAKE_BUILD_TYPE}" build_type)
+-if ((NOT ${build_type} STREQUAL "RELEASE") AND (NOT ${build_type} STREQUAL "RELWITHDEBINFO"))
+-  set(IS_DEBUG_BUILD 1)
+-endif()
+ 
+ include(DawnSetIfNotDefined)
+ 
+@@ -90,8 +86,8 @@ set(FORCE_SYSTEM_COMPONENT_LOAD OFF)
+ if (EMSCRIPTEN)
+   # Only the samples are supported for Emscripten at the moment.
+   # TODO(crbug.com/42240181): Make dawn_end2end_tests work too.
+-  set(BUILD_SAMPLES ON)
+-  set(BUILD_TESTS ON)
++  set(BUILD_SAMPLES OFF)
++  set(BUILD_TESTS OFF)
+   set(ENABLE_NULL OFF)
+   set(ENABLE_WEBGPU_ON_WEBGPU OFF)
+ elseif (WIN32)
+@@ -240,6 +236,7 @@ option(TINT_BUILD_WGSL_WRITER "Build the WGSL output writer" ON)
+ 
+ option(TINT_BUILD_IR_BINARY "Build IR binary format support" ${DAWN_BUILD_PROTOBUF})
+ option(TINT_BUILD_FUZZERS "Build fuzzers" OFF)
++option(TINT_BUILD_IR_FUZZER "Build IR fuzzer" OFF)
+ option(TINT_BUILD_BENCHMARKS "Build Tint benchmarks" OFF)
+ option(TINT_BUILD_TESTS "Build tests" ON)
+ option(TINT_BUILD_AS_OTHER_OS "Override OS detection to force building of *_other.cc files" OFF)
+diff --git a/Dependencies/dawn/third_party/CMakeLists.txt b/Dependencies/dawn/third_party/CMakeLists.txt
+index 368dc974..bbf1505c 100644
+--- a/Dependencies/dawn/third_party/CMakeLists.txt
++++ b/Dependencies/dawn/third_party/CMakeLists.txt
+@@ -117,7 +117,7 @@ endif()
+ # End of Emscripten enabled third party directories
+ ################################################################################
+ if (EMSCRIPTEN)
+-    return()
++    # return()
+ endif()
+ 
+ # Force ENABLE_RTTI in spirv-tools and glslang.

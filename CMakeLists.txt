@@ -1,14 +1,14 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.22)
 
 project(twgsl)
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_EXTENSIONS OFF)
+string(REGEX REPLACE "([\\/\\-]O)3" "\\1z" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 
 add_subdirectory(Dependencies)
 
-target_compile_options(SPIRV-Tools-static PRIVATE -Oz)
-target_compile_options(SPIRV-Tools-opt PRIVATE -Oz)
-target_compile_options(tint_api PRIVATE -Oz)
+string(TOUPPER "${CMAKE_BUILD_TYPE}" build_type)
+
 target_compile_options(tint_utils_system PRIVATE "-Wno-disabled-macro-expansion")
 
 add_subdirectory(Core)
